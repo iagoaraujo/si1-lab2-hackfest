@@ -20,21 +20,28 @@ public class Application extends Controller {
 	static GenericDAO dao = new DAO();
 	static Form<Usuario> usuarioForm = Form.form(Usuario.class);
 	static Form<Hackfest> hackForm = Form.form(Hackfest.class);
-
+	static Usuario usuarioAtual;
+	
+    @Transactional
     public static Result index() {
-        return ok(login.render(usuarioForm));
+    	if(usuarioAtual==null){
+    		return ok(login.render(usuarioForm));
+    	}
+    	else if(isAdmin(usuarioAtual)){
+    		List<Hackfest> hackfests = dao.findAllByClassName("hackfest");
+    		return ok(homeAdmin.render(hackForm, hackfests));
+    	}
+    	else{
+    		return ok(home.render(usuarioAtual));
+    	}
     }
     
     @Transactional
     public static Result logar(){
     	Form<Usuario> filledForm = usuarioForm.bindFromRequest();
-    	Usuario usuario = filledForm.get();
-    	if(isAdmin(usuario)){
-    		List<Hackfest> hackfests = dao.findAllByClassName("hackfest");
-    		return ok(homeAdmin.render(hackForm, hackfests));
-    	}
-    	criaUsuario(usuario);
-    	return ok(home.render());
+    	usuarioAtual = filledForm.get();
+    	criaUsuario(usuarioAtual);
+    	return redirect(routes.Application.index());
     }
     
     private static void criaUsuario(Usuario usuario) {
@@ -56,5 +63,41 @@ public class Application extends Controller {
     	dao.flush();
     	List<Hackfest> hackfests = dao.findAllByClassName("hackfest");
     	return ok(homeAdmin.render(hackForm, hackfests));
+    }
+    
+    @Transactional
+    public static Result mudarListaDeHackfests(String tema){
+    	List<Hackfest> hackfests;
+    	hackfests = dao.findByAttributeName("hackfest", "tema", tema);
+		return ok(geral.render(hackfests, tema, usuarioAtual));
+//    	switch (tema) {
+//		case "linguagensDeProgramacao":
+//			hackfests = dao.findByAttributeName("hackfest", "tema", "linguagensDeProgramacao");
+//			return ok(geral.render(hackfests, "linguagensDeProgramacao", usuarioAtual));
+//		case "promovidosPorEmpresas":
+//			hackfests = dao.findByAttributeName("hackfest", "tema", "promovidosPorEmpresas");
+//			return ok(geral.render(hackfests, "promovidosPorEmpresas", usuarioAtual));
+//		case "dispositivosMoveis":
+//			hackfests = dao.findByAttributeName("hackfest", "tema", "dispositivosMoveis");
+//			return ok(geral.render(hackfests, "dispositivosMoveis", usuarioAtual));
+//		default:
+//			hackfests = dao.findByAttributeName("hackfest", "tema", "geral");
+//			return ok(geral.render(hackfests, "geral", usuarioAtual));
+//		}
+    }
+    
+    public static Result logout(){
+    	usuarioAtual = null;
+    	return redirect(routes.Application.index());
+    }
+    
+    @Transactional
+    public static Result confirmaPresenca(Long id){
+    	Hackfest hackfest = dao.findByEntityId(Hackfest.class, id);
+    	hackfest.addUsuario(usuarioAtual);
+    	dao.merge(hackfest);
+    	dao.flush();
+    	String tema = hackfest.getTema();
+    	return redirect(routes.Application.mudarListaDeHackfests(tema));
     }
 }

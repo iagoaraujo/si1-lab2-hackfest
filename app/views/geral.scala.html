@@ -1,4 +1,4 @@
-@(hackForm: Form[Hackfest], hackfests: List[Hackfest])
+@(hackfests: List[Hackfest], tema: String, usuario: Usuario)
 
 <html lang="en">
   <head>
@@ -53,37 +53,42 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="/">Página Inicial</a></li>
+            <li><a href="/">Página Inicial</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+          	@if(tema=="linguagensDeProgramacao"){
+            <li class="active"><a href="/listaHackfests/linguagensDeProgramacao">Linguagens de Programação</a></li>
+            } else {
+            <li><a href="/listaHackfests/linguagensDeProgramacao">Linguagens de Programação</a></li>
+            }
+            @if(tema=="promovidosPorEmpresas"){
+            <li class="active"><a href="/listaHackfests/promovidosPorEmpresas">Promovidos por Empresas</a></li>
+            } else {
+        	<li><a href="/listaHackfests/promovidosPorEmpresas">Promovidos por Empresas</a></li>
+            }
+            @if(tema=="dispositivosMoveis"){
+            <li class="active"><a href="/listaHackfests/dispositivosMoveis">Dispositivos Móveis</a></li>
+            } else {
+            <li><a href="/listaHackfests/dispositivosMoveis">Dispositivos Móveis</a></li>
+            }
+            @if(tema=="geral"){
+            <li class="active"><a href="/listaHackfests/geral">Geral</a></li>
+            } else {
+            <li><a href="/listaHackfests/geral">Geral</a></li>
+            }
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Crie um novo Hackfest</h1>
+          <h1 class="page-header">Dashboard</h1>
 
           <div class="row placeholders">
-            <form action="@routes.Application.novoHackfest()" method="post">
-            	Nome: <input type="text" name="nome" class="form-control" required="required"><br>
-            	Descrição: <input type="text" name="descricao" class="form-control" required="required"><br>
-            	Tema:
-            	<select name="tema" required="required">
-            		<option value="" disabled>-- Selecione um tema --</option>
-            		<option value="linguagensDeProgramacao">Linguagens de Programação</option>
-            		<option value="promovidosPorEmpresas">Promovidos por Empresas</option>
-            		<option value="dispositivosMoveis">Dispositivos Móveis</option>
-            		<option value="geral">Geral</option> 
-            	</select><br>
-            	Data: <input type="date" name="data" class="form-control" required="required"><br>
-            	<input type="submit" value="Criar Evento">
-            </form>
-          </div>
-
-          <h2 class="sub-header">Hackfests já criados</h2>
-          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>Nome</th>
                   <th>Descrição</th>
                   <th>Data</th>
+                  <th>Presença</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,6 +97,11 @@
                   <td>@hackfest.getNome()</td>
                   <td>@hackfest.getDescricao()</td>
                   <td>@hackfest.getData()</td>
+                  @if(hackfest.hasUsuario(usuario)){
+                  <td>Confirmado</td>
+                  } else {
+                  <td><a href="@routes.Application.confirmaPresenca(hackfest.getId())">Confirmar</a></td>
+                  }
                 </tr>
                 }
               </tbody>

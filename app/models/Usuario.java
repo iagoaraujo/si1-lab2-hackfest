@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity(name="usuario")
@@ -22,35 +21,10 @@ public class Usuario {
 	private Long id;
 	
 	@Column
-	private String tipo;
-	
-	@Column
 	private String nome;
 	
 	@Column
 	private String email;
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	private List<Hackfest> hackfests;
-
-	public List<Hackfest> getHackfests() {
-		if(hackfests==null){
-			hackfests = new LinkedList<Hackfest>();
-		}
-		return hackfests;
-	}
-
-	public void setHackfests(List<Hackfest> hackfests) {
-		this.hackfests = hackfests;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
 	public String getNome() {
 		return nome;
@@ -66,5 +40,16 @@ public class Usuario {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Usuario){
+			Usuario usuario = (Usuario) obj;
+			if(nome.equals(usuario.getNome()) && email.equals(usuario.getEmail())){
+				return true;
+			}
+		}
+		return false;
 	}
 }
