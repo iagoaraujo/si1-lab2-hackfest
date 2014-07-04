@@ -1,4 +1,4 @@
-@(hackfests: List[Hackfest], tema: String, usuario: Usuario)
+@(usuarios: List[Usuario], hackfest: Hackfest)
 
 <html lang="en">
   <head>
@@ -53,73 +53,26 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="/">Página Inicial</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-          	@if(tema=="linguagensDeProgramacao"){
-            <li class="active"><a href="/listaHackfests/linguagensDeProgramacao">Linguagens de Programação</a></li>
-            } else {
-            <li><a href="/listaHackfests/linguagensDeProgramacao">Linguagens de Programação</a></li>
-            }
-            @if(tema=="promovidosPorEmpresas"){
-            <li class="active"><a href="/listaHackfests/promovidosPorEmpresas">Promovidos por Empresas</a></li>
-            } else {
-        	<li><a href="/listaHackfests/promovidosPorEmpresas">Promovidos por Empresas</a></li>
-            }
-            @if(tema=="dispositivosMoveis"){
-            <li class="active"><a href="/listaHackfests/dispositivosMoveis">Dispositivos Móveis</a></li>
-            } else {
-            <li><a href="/listaHackfests/dispositivosMoveis">Dispositivos Móveis</a></li>
-            }
-            @if(tema=="frameworks"){
-            <li class="active"><a href="/listaHackfests/frameworks">APIs e Frameworks</a></li>
-            } else {
-            <li><a href="/listaHackfests/frameworks">APIs e Frameworks</a></li>
-            }
-            @if(tema=="geral"){
-            <li class="active"><a href="/listaHackfests/geral">Geral</a></li>
-            } else {
-            <li><a href="/listaHackfests/geral">Geral</a></li>
-            }
+            <li class="active"><a href="/">Página Inicial</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          @if(tema=="linguagensDeProgramacao"){
-          <h1 class="page-header">Linguagens de Programação</h1>
-          }
-          @if(tema=="promovidosPorEmpresas"){
-          <h1 class="page-header">Promovidos por Empresas</h1>
-          }
-          @if(tema=="dispositivosMoveis"){
-          <h1 class="page-header">Dispositivos Móveis</h1>
-          }
-          @if(tema=="frameworks"){
-          <h1 class="page-header">APIs e Frameworks</h1>
-          }
-          @if(tema=="geral"){
-          <h1 class="page-header">Geral</h1>
-          }
-          <div class="row placeholders">
+          <h1 class="page-header">@hackfest.getNome()</h1>
+
+          <h2 class="sub-header">Lista de inscritos</h2>
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>Nome</th>
-                  <th>Descrição</th>
-                  <th>Data</th>
-                  <th>Presença</th>
+                  <th>Email</th>
                 </tr>
               </thead>
               <tbody>
-              	@for(hackfest <- hackfests){
+              	@for(usuario <- usuarios){
                 <tr>
-                  <td>@hackfest.getNome()</td>
-                  <td>@hackfest.getDescricao()</td>
-                  <td>@hackfest.getData()</td>
-                  @if(hackfest.hasUsuario(usuario)){
-                  <td>Confirmado</td>
-                  } else {
-                  <td><a href="@routes.Application.confirmaPresenca(hackfest.getId(), tema)">Confirmar</a></td>
-                  }
+                  <td>@usuario.getNome()</td>
+                  <td>@usuario.getEmail()</td>
                 </tr>
                 }
               </tbody>

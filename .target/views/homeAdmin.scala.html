@@ -64,13 +64,12 @@
             	Nome: <input type="text" name="nome" class="form-control" required="required"><br>
             	Descrição: <input type="text" name="descricao" class="form-control" required="required"><br>
             	Tema:
-            	<select name="tema" required="required">
-            		<option value="" disabled>-- Selecione um tema --</option>
-            		<option value="linguagensDeProgramacao">Linguagens de Programação</option>
-            		<option value="promovidosPorEmpresas">Promovidos por Empresas</option>
-            		<option value="dispositivosMoveis">Dispositivos Móveis</option>
-            		<option value="geral">Geral</option> 
-            	</select><br>
+            	<input type="checkbox" name="temas[0]" value="linguagensDeProgramacao">Linguagens de Programação
+            	<input type="checkbox" name="temas[1]" value="promovidosPorEmpresas">Promovidos por Empresas
+            	<input type="checkbox" name="temas[2]" value="dispositivosMoveis">Dispositivos Móveis
+            	<input type="checkbox" name="temas[3]" value="frameworks">APIs e Frameworks
+            	<input type="checkbox" name="temas[4]" value="geral">Geral <br>
+            	
             	Data: <input type="date" name="data" class="form-control" required="required"><br>
             	<input type="submit" value="Criar Evento">
             </form>
@@ -92,6 +91,8 @@
                   <td>@hackfest.getNome()</td>
                   <td>@hackfest.getDescricao()</td>
                   <td>@hackfest.getData()</td>
+                  <td>@hackfest.getQtdInscritos()</td>
+                  <td><a href="@routes.Application.listarInscritos(hackfest.getId())"><img src="@routes.Assets.at("images/details.png")"></a></td>
                 </tr>
                 }
               </tbody>

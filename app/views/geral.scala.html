@@ -71,6 +71,11 @@
             } else {
             <li><a href="/listaHackfests/dispositivosMoveis">Dispositivos Móveis</a></li>
             }
+            @if(tema=="frameworks"){
+            <li class="active"><a href="/listaHackfests/frameworks">APIs e Frameworks</a></li>
+            } else {
+            <li><a href="/listaHackfests/frameworks">APIs e Frameworks</a></li>
+            }
             @if(tema=="geral"){
             <li class="active"><a href="/listaHackfests/geral">Geral</a></li>
             } else {
@@ -79,8 +84,21 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
-
+          @if(tema=="linguagensDeProgramacao"){
+          <h1 class="page-header">Linguagens de Programação</h1>
+          }
+          @if(tema=="promovidosPorEmpresas"){
+          <h1 class="page-header">Promovidos por Empresas</h1>
+          }
+          @if(tema=="dispositivosMoveis"){
+          <h1 class="page-header">Dispositivos Móveis</h1>
+          }
+          @if(tema=="frameworks"){
+          <h1 class="page-header">APIs e Frameworks</h1>
+          }
+          @if(tema=="geral"){
+          <h1 class="page-header">Geral</h1>
+          }
           <div class="row placeholders">
             <table class="table table-striped">
               <thead>
@@ -100,7 +118,7 @@
                   @if(hackfest.hasUsuario(usuario)){
                   <td>Confirmado</td>
                   } else {
-                  <td><a href="@routes.Application.confirmaPresenca(hackfest.getId())">Confirmar</a></td>
+                  <td><a href="@routes.Application.confirmaPresenca(hackfest.getId(), tema)">Confirmar</a></td>
                   }
                 </tr>
                 }
